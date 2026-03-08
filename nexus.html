@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS — Multi-Functional Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-body: #0a0c10;
+            --bg-card: #151921;
+            --accent-blue: #3b82f6;
+            --accent-gold: #fbbf24;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --text-main: #f3f4f6;
+            --text-dim: #9ca3af;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* Background effects */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        /* Sections */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title span {
+            color: var(--accent-blue);
+        }
+
+        /* Calculator Styles */
+        .calculator-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .calc-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .calc-btn:active {
+            transform: translateY(0);
+        }
+
+        #results {
+            margin-top: 30px;
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-tile {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .result-val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent-blue);
+            display: block;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .zodiac-banner {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .zodiac-icon {
+            font-size: 3rem;
+        }
+
+        .zodiac-info h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+        }
+
+        .zodiac-info p {
+            font-size: 0.95rem;
+            margin-top: 4px;
+            color: var(--text-main);
+        }
+
+        /* News Section Styles */
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .live-badge {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .news-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: var(--glass);
+            border-radius: 12px;
+            transition: background 0.3s;
+        }
+
+        .news-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            font-weight: 700;
+            min-width: 65px;
+        }
+
+        .news-content h5 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .news-content p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .developing {
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            background: rgba(251, 191, 36, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .tag-military {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+        }
+
+        .tag-econ {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+        }
+
+        .tag-sport {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            .zodiac-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>NEXUS HUB</h1>
+            <p>Intelligence Core • Sunday, March 8, 2026</p>
+        </header>
+
+        <!-- Section 1: Chronos Calculator -->
+        <section class="card">
+            <h2 class="section-title"><span>🕰️</span> Chronos Calculator</h2>
+
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label>Enter Date of Birth (DD / MM / YYYY)</label>
+                    <div class="input-row">
+                        <input type="number" id="dob-dd" placeholder="DD" min="1" max="31">
+                        <input type="number" id="dob-mm" placeholder="MM" min="1" max="12">
+                        <input type="number" id="dob-yyyy" placeholder="YYYY" min="1900" max="2026">
+                    </div>
+                </div>
+                <button class="calc-btn" onclick="calculateAll()">Calculate Cosmic Profile</button>
+
+                <div id="results">
+                    <div class="result-tile">
+                        <span class="result-val" id="res-age">—</span>
+                        <span class="result-label">Age (Y/M/D)</span>
+                    </div>
+                    <div class="result-tile">
+                        <span class="result-val" id="res-day">—</span>
+                        <span class="result-label">Day of Birth</span>
+                    </div>
+                    <div class="zodiac-banner">
+                        <div class="zodiac-icon" id="z-icon">?</div>
+                        <div class="zodiac-info">
+                            <h4 id="z-name">Zodiac Sign</h4>
+                            <p id="z-fact">Waiting for calculation...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Tension Briefing -->
+        <section class="card">
+            <div class="news-header">
+                <h2 class="section-title"><span>📡</span> Tension Briefing</h2>
+                <div class="live-badge">
+                    <span class="live-dot"></span> Live Feed
+                </div>
+            </div>
+
+            <div class="news-feed">
+                <!-- Military / Geopolitical -->
+                <div class="news-item">
+                    <div class="timestamp">15:42</div>
+                    <div class="news-content">
+                        <span class="tag tag-military">Military escalation</span>
+                        <h5>Operation Epic Fury: Joint strikes reported near Bushehr</h5>
+                        <p>Pentagon officials confirm U.S. and Israeli naval assets have successfully neutralized
+                            missile launch sites. Iran declares the Strait of Hormuz "permanently contested" until
+                            further notice. <span class="developing">Developing</span></p>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="timestamp">14:10</div>
+                    <div class="news-content">
+                        <span class="tag tag-econ">Global Markets</span>
+                        <h5>Oil surges to $115 as Hormuz passage blocked</h5>
+                        <p>Brent crude prices have climbed 8% in the last 4 hours after tankers were advised to hold
+                            position. Analysts warn of severe supply chain disruptions across Europe and East Asia.</p>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="timestamp">12:30</div>
+                    <div class="news-content">
+                        <span class="tag tag-military">Eastern Europe</span>
+                        <h5>Kyiv Intercepts Mass Hypersonic Salvo</h5>
+                        <p>Ukraine's air defense grid neutralized 80% of incoming strikes targeting Ternopil and Lviv.
+                            NATO Secretary-General announces "accelerated munitions pipeline" activation. <span
+                                class="developing">Developing</span></p>
+                    </div>
+                </div>
+
+                <!-- T20 World Cup -->
+                <div class="news-item">
+                    <div class="timestamp">18:05</div>
+                    <div class="news-content">
+                        <span class="tag tag-sport">T20 World Cup</span>
+                        <h5>FINAL: India leads by 22 runs in Sydney</h5>
+                        <p>In a dramatic final overs at the SCG, New Zealand requires 48 runs from 24 balls to lift the
+                            trophy. Sky Stadium hubs in Wellington report record viewing numbers. <span
+                                class="developing">Live</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            Built for Google Chrome • Nexus Intelligence Hub • © 2026
+        </footer>
+    </div>
+
+    <script>
+        const ZODIAC = [
+            { name: "Capricorn", icon: "♑", start: [12, 22], end: [1, 19], fact: "The CEOs of the zodiac — ambitious, disciplined, and ruthlessly efficient." },
+            { name: "Aquarius", icon: "♒", start: [1, 20], end: [2, 18], fact: "Visionary thinkers who live in the year 2050 while we're stuck in 2026." },
+            { name: "Pisces", icon: "♓", start: [2, 19], end: [3, 20], fact: "Dreamy empaths who see the world through a cinematic filter of deep emotion." },
+            { name: "Aries", icon: "♈", start: [3, 21], end: [4, 19], fact: "Fire starters. They don't just enter a room; they charge in and take charge." },
+            { name: "Taurus", icon: "♉", start: [4, 20], end: [5, 20], fact: "Steadfast and lovers of luxury. They will fight for justice, then nap on silk sheets." },
+            { name: "Gemini", icon: "♊", start: [5, 21], end: [6, 20], fact: "Social chameleons who can hold four conversations and a tweet thread at once." },
+            { name: "Cancer", icon: "♋", start: [6, 21], end: [7, 22], fact: "The ultimate protectors. Fiercely loyal with an intuition that borderlines on psychic." },
+            { name: "Leo", icon: "♌", start: [7, 23], end: [8, 22], fact: "Main character energy. Born to shine and inspire every person in their orbit." },
+            { name: "Virgo", icon: "♍", start: [8, 23], end: [9, 22], fact: "The perfectionists. They've already spotted three typos in this code, probably." },
+            { name: "Libra", icon: "♎", start: [9, 23], end: [10, 22], fact: "Charming diplomats who will spend an hour picking the 'fair' place for lunch." },
+            { name: "Scorpio", icon: "♏", start: [10, 23], end: [11, 21], fact: "Magnetic and mysterious. They know your secrets before you've even told them." },
+            { name: "Sagittarius", icon: "♐", start: [11, 22], end: [12, 21], fact: "Cosmic explorers. Allergic to boredom and always searching for the meaning of life." }
+        ];
+
+        function getZodiac(day, month) {
+            for (let z of ZODIAC) {
+                let [sM, sD] = z.start;
+                let [eM, eD] = z.end;
+                if ((month === sM && day >= sD) || (month === eM && day <= eD)) return z;
+                if (sM > eM) { // Year boundary
+                    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return ZODIAC[0]; // Caps
+                }
+            }
+            // Fallback
+            if (month === 12 && day >= 22) return ZODIAC[0];
+            return ZODIAC[1];
+        }
+
+        function calculateAll() {
+            const di = document.getElementById('dob-dd').value;
+            const mi = document.getElementById('dob-mm').value;
+            const yi = document.getElementById('dob-yyyy').value;
+
+            if (!di || !mi || !yi) {
+                alert("Please fill in all DOB fields.");
+                return;
+            }
+
+            const day = parseInt(di);
+            const month = parseInt(mi);
+            const year = parseInt(yi);
+
+            // Logic Check
+            const dob = new Date(year, month - 1, day);
+            const today = new Date(2026, 2, 8); // March 8, 2026
+
+            if (dob > today) {
+                alert("Date of birth cannot be in the future.");
+                return;
+            }
+
+            // 1. Exact Age
+            let years = today.getFullYear() - dob.getFullYear();
+            let months = today.getMonth() - dob.getMonth();
+            let days = today.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            document.getElementById('res-age').innerText = `${years}y ${months}m ${days}d`;
+
+            // 2. Day of Birth
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            document.getElementById('res-day').innerText = dayNames[dob.getDay()];
+
+            // 3. Zodiac
+            const z = getZodiac(day, month);
+            document.getElementById('z-icon').innerText = z.icon;
+            document.getElementById('z-name').innerText = z.name;
+            document.getElementById('z-fact').innerText = z.fact;
+
+            // Show Results
+            document.getElementById('results').style.display = 'grid';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>
