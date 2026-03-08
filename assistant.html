@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus | Personal Intelligence Hub</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bg-deep: #050810;
+            --bg-card: rgba(13, 18, 35, 0.85);
+            --bg-glass: rgba(255, 255, 255, 0.04);
+            --accent-1: #6c63ff;
+            --accent-2: #f72585;
+            --accent-3: #00d4ff;
+            --accent-4: #ff9f43;
+            --gold: #ffd700;
+            --red-hot: #ff4d4d;
+            --green: #00e5a0;
+            --text-1: #f0f4ff;
+            --text-2: #a8b2d8;
+            --border: rgba(108, 99, 255, 0.25);
+            --glow-1: rgba(108, 99, 255, 0.35);
+            --glow-2: rgba(247, 37, 133, 0.35);
+            --glow-3: rgba(0, 212, 255, 0.35);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-1);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Animated Background ─── */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 10%, rgba(108, 99, 255, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 50% at 80% 90%, rgba(247, 37, 133, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 60% 30%, rgba(0, 212, 255, 0.07) 0%, transparent 60%),
+                var(--bg-deep);
+        }
+
+        .bg-canvas::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 30px 40px, rgba(255, 255, 255, 0.08) 0%, transparent 100%),
+                radial-gradient(1px 1px at 120px 180px, rgba(108, 99, 255, 0.15) 0%, transparent 100%),
+                radial-gradient(1px 1px at 250px 80px, rgba(0, 212, 255, 0.10) 0%, transparent 100%),
+                radial-gradient(1px 1px at 400px 320px, rgba(247, 37, 133, 0.12) 0%, transparent 100%),
+                radial-gradient(1px 1px at 600px 150px, rgba(255, 255, 255, 0.06) 0%, transparent 100%),
+                radial-gradient(1px 1px at 800px 400px, rgba(108, 99, 255, 0.10) 0%, transparent 100%),
+                radial-gradient(1px 1px at 950px 220px, rgba(0, 212, 255, 0.08) 0%, transparent 100%),
+                radial-gradient(1px 1px at 1100px 550px, rgba(247, 37, 133, 0.09) 0%, transparent 100%),
+                radial-gradient(1px 1px at 1300px 90px, rgba(255, 255, 255, 0.07) 0%, transparent 100%),
+                radial-gradient(1px 1px at 1500px 350px, rgba(108, 99, 255, 0.12) 0%, transparent 100%);
+            background-size: 1600px 800px;
+            animation: starDrift 40s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes starDrift {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-400px);
+            }
+        }
+
+        /* ─── Layout ─── */
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ─── Header ─── */
+        .site-header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .site-header .badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--accent-1);
+            background: rgba(108, 99, 255, 0.12);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-1);
+            margin-bottom: 20px;
+        }
+
+        .site-header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.2rem, 6vw, 4.2rem);
+            font-weight: 900;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-3) 40%, var(--accent-1) 70%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 14px;
+        }
+
+        .site-header p {
+            color: var(--text-2);
+            font-size: 1.05rem;
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ─── Tab Nav ─── */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            position: relative;
+            padding: 14px 36px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--bg-glass);
+            color: var(--text-2);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .tab-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            color: #fff;
+            border-color: var(--accent-1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow-1);
+        }
+
+        .tab-btn.active::before {
+            opacity: 1;
+        }
+
+        /* ─── Section ─── */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── Card ─── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-2), transparent);
+        }
+
+        /* ─── Chronos Calculator ─── */
+        .calc-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 700px) {
+            .calc-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calc-left h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .calc-left p {
+            color: var(--text-2);
+            font-size: 0.88rem;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-3);
+            margin-bottom: 10px;
+        }
+
+        .dob-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dob-inputs input {
+            flex: 1;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-1);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .dob-inputs input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px var(--glow-1);
+            background: rgba(108, 99, 255, 0.08);
+        }
+
+        .dob-inputs input::placeholder {
+            color: rgba(168, 178, 216, 0.4);
+        }
+
+        .dob-inputs .hint {
+            display: block;
+            font-size: 0.7rem;
+            text-align: center;
+            color: var(--text-2);
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        .dob-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calc-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calc-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px var(--glow-2);
+        }
+
+        .calc-btn:hover::after {
+            opacity: 1;
+        }
+
+        .calc-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Results */
+        .calc-right {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .result-placeholder {
+            flex: 1;
+            border: 2px dashed rgba(108, 99, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: var(--text-2);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 30px;
+            min-height: 300px;
+        }
+
+        .result-placeholder .icon {
+            font-size: 3rem;
+            opacity: 0.4;
+        }
+
+        .result-panel {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .result-panel.show {
+            display: flex;
+        }
+
+        .stat-row {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-row:hover {
+            transform: translateX(4px);
+        }
+
+        .stat-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-2);
+            margin-bottom: 3px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        .zodiac-card {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.15), rgba(247, 37, 133, 0.12));
+            border: 1px solid rgba(108, 99, 255, 0.4);
+            border-radius: 20px;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .zodiac-sign {
+            font-size: 3.5rem;
+            margin-bottom: 8px;
+        }
+
+        .zodiac-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .zodiac-fun {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-2);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .error-msg {
+            background: rgba(255, 77, 77, 0.12);
+            border: 1px solid rgba(255, 77, 77, 0.4);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--red-hot);
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        /* ─── Tension Report ─── */
+        .report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .report-header-left h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--red-hot), var(--accent-4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .report-header-left p {
+            color: var(--text-2);
+            font-size: 0.85rem;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 77, 77, 0.12);
+            border: 1px solid rgba(255, 77, 77, 0.4);
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--red-hot);
+            letter-spacing: 1px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--red-hot);
+            border-radius: 50%;
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+        }
+
+        .region-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .region-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .region-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .region-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 24px;
+            background: var(--rh-bg, rgba(108, 99, 255, 0.1));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .region-icon {
+            font-size: 2rem;
+        }
+
+        .region-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        .region-sub {
+            font-size: 0.75rem;
+            color: var(--text-2);
+            margin-top: 2px;
+        }
+
+        .threat-level {
+            margin-left: auto;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .threat-critical {
+            background: rgba(255, 77, 77, 0.2);
+            color: var(--red-hot);
+            border: 1px solid rgba(255, 77, 77, 0.5);
+        }
+
+        .threat-high {
+            background: rgba(255, 159, 67, 0.2);
+            color: var(--accent-4);
+            border: 1px solid rgba(255, 159, 67, 0.5);
+        }
+
+        .threat-moderate {
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+        }
+
+        .region-body {
+            padding: 22px 24px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bullet-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--text-2);
+            line-height: 1.6;
+        }
+
+        .bullet-list li::before {
+            content: '▸';
+            color: var(--bullet-color, var(--accent-1));
+            flex-shrink: 0;
+            margin-top: 2px;
+            font-size: 0.8rem;
+        }
+
+        .bullet-list li strong {
+            color: var(--text-1);
+            font-weight: 600;
+        }
+
+        .dev-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 1px;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+
+        .region-mid {
+            --rh-bg: rgba(247, 37, 133, 0.1);
+        }
+
+        .region-eu {
+            --rh-bg: rgba(0, 212, 255, 0.1);
+        }
+
+        .region-eco {
+            --rh-bg: rgba(0, 229, 160, 0.08);
+        }
+
+        .region-mid .bullet-list li::before {
+            color: var(--accent-2);
+        }
+
+        .region-eu .bullet-list li::before {
+            color: var(--accent-3);
+        }
+
+        .region-eco .bullet-list li::before {
+            color: var(--green);
+        }
+
+        .report-footer {
+            margin-top: 24px;
+            padding: 18px 24px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-2);
+        }
+
+        .report-footer .icon {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 500px) {
+            .card {
+                padding: 24px 18px;
+            }
+
+            .tab-btn {
+                padding: 12px 22px;
+                font-size: 0.82rem;
+            }
+
+            .report-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-canvas"></div>
+
+    <div class="wrapper">
+        <!-- Header -->
+        <header class="site-header">
+            <div class="badge">⚡ Nexus Intelligence</div>
+            <h1>Multi-Function Assistant</h1>
+            <p>Your personal hub for cosmic self-discovery and real-time global awareness.</p>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('calculator', this)">
+                <span>🕰️ Chronos Calculator</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('tension', this)">
+                <span>🌐 Global Tension Report</span>
+            </button>
+        </nav>
+
+        <!-- ═══ SECTION 1: CHRONOS CALCULATOR ═══ -->
+        <section id="tab-calculator" class="section active">
+            <div class="card">
+                <div class="calc-layout">
+                    <!-- Left: Input -->
+                    <div class="calc-left">
+                        <h2>⏳ The Chronos Calculator</h2>
+                        <p>Enter your date of birth to unveil your exact age, the day you entered this world, and the
+                            cosmic zodiac sign that defines you.</p>
+
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <div class="dob-inputs">
+                                <div class="dob-field">
+                                    <input type="number" id="dob-dd" placeholder="DD" min="1" max="31" maxlength="2"
+                                        oninput="autoTab(this,'dob-mm',2)" />
+                                    <span class="hint">Day</span>
+                                </div>
+                                <div class="dob-field">
+                                    <input type="number" id="dob-mm" placeholder="MM" min="1" max="12" maxlength="2"
+                                        oninput="autoTab(this,'dob-yyyy',2)" />
+                                    <span class="hint">Month</span>
+                                </div>
+                                <div class="dob-field">
+                                    <input type="number" id="dob-yyyy" placeholder="YYYY" min="1900" max="2025"
+                                        maxlength="4" />
+                                    <span class="hint">Year</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="error-msg" id="calc-error">⚠️ Please enter a valid date of birth.</div>
+
+                        <button class="calc-btn" onclick="calculate()">✨ Reveal My Cosmic Profile</button>
+                    </div>
+
+                    <!-- Right: Results -->
+                    <div class="calc-right">
+                        <div class="result-placeholder" id="result-placeholder">
+                            <div class="icon">🔮</div>
+                            <div>Your cosmic profile awaits.<br />Enter your date of birth to begin.</div>
+                        </div>
+                        <div class="result-panel" id="result-panel">
+                            <div class="stat-row">
+                                <div class="stat-icon">🎂</div>
+                                <div>
+                                    <div class="stat-label">Exact Age</div>
+                                    <div class="stat-value" id="res-age">—</div>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-icon">📅</div>
+                                <div>
+                                    <div class="stat-label">Day of Birth</div>
+                                    <div class="stat-value" id="res-day">—</div>
+                                </div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-icon">🌍</div>
+                                <div>
+                                    <div class="stat-label">Date Formatted</div>
+                                    <div class="stat-value" id="res-date">—</div>
+                                </div>
+                            </div>
+                            <div class="zodiac-card">
+                                <div class="zodiac-sign" id="zodiac-emoji">♈</div>
+                                <div class="zodiac-name" id="zodiac-name">Aries</div>
+                                <div class="zodiac-fun" id="zodiac-fun">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- calc-layout -->
+            </div><!-- card -->
+        </section>
+
+        <!-- ═══ SECTION 2: GLOBAL TENSION REPORT ═══ -->
+        <section id="tab-tension" class="section">
+            <div class="card">
+                <div class="report-header">
+                    <div class="report-header-left">
+                        <h2>🌐 Global Tension Briefing</h2>
+                        <p>Real-time intelligence — Sunday, March 8, 2026 | 14:55 PKT</p>
+                    </div>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+
+                <div class="region-grid">
+
+                    <!-- Middle East -->
+                    <div class="region-card region-mid">
+                        <div class="region-header">
+                            <div class="region-icon">🕌</div>
+                            <div>
+                                <div class="region-title">The Middle East</div>
+                                <div class="region-sub">U.S.–Israel Joint Operations · Strait of Hormuz</div>
+                            </div>
+                            <div class="threat-level threat-critical">CRITICAL</div>
+                        </div>
+                        <div class="region-body">
+                            <ul class="bullet-list">
+                                <li><strong>Operation Epic Fury / Roaring Lion:</strong> On Feb. 28, 2026, the U.S. and
+                                    Israel launched a coordinated military campaign targeting Iranian leadership,
+                                    nuclear sites, ballistic missile infrastructure, and IRGC command nodes — the
+                                    largest U.S. military surge in the region since 2003.</li>
+                                <li><strong>Khamenei Reportedly Killed:</strong> Iranian state media has not confirmed
+                                    the fate of Supreme Leader Ali Khamenei following the strikes; international
+                                    intelligence agencies assess he was killed in the opening wave of attacks. <span
+                                        class="dev-tag">DEVELOPING</span></li>
+                                <li><strong>Iranian Retaliation:</strong> Iran launched waves of ballistic missiles and
+                                    Shahed drones at U.S. bases in the Gulf and at Israeli population centers. Hezbollah
+                                    simultaneously rocket-fired into northern Israel, triggering IDF counter-strikes in
+                                    Lebanon.</li>
+                                <li><strong>Strait of Hormuz — Effectively Closed:</strong> The IRGC issued a maritime
+                                    exclusion zone; tanker traffic dropped sharply, with 150+ vessels at anchor outside
+                                    the strait. Major shipping firms (MSC, Hapag-Lloyd) suspended Gulf routing.</li>
+                                <li><strong>U.S. Navy Escort Proposal:</strong> On Mar. 3, President Trump announced
+                                    plans to escort oil tankers through the Strait. The White House confirmed active
+                                    contingency planning; an IRGC spokesman on Mar. 7 warned U.S. escorts would face
+                                    "consequences." <span class="dev-tag">DEVELOPING</span></li>
+                                <li><strong>U.S. Naval Engagements:</strong> U.S. destroyers have destroyed at least
+                                    four IRGC fast-attack craft. Political risk insurance for Gulf shipping lanes is
+                                    being coordinated by Washington and Lloyd's of London.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Eastern Europe -->
+                    <div class="region-card region-eu">
+                        <div class="region-header">
+                            <div class="region-icon">🛡️</div>
+                            <div>
+                                <div class="region-title">Eastern Europe</div>
+                                <div class="region-sub">Russia–Ukraine Frontline · NATO Posture Update</div>
+                            </div>
+                            <div class="threat-level threat-high">HIGH</div>
+                        </div>
+                        <div class="region-body">
+                            <ul class="bullet-list">
+                                <li><strong>Frontline Overview:</strong> Russia has seized ~2,038 sq. mi. of Ukrainian
+                                    territory over the past year. In the past week (Feb. 24–Mar. 3), Russian forces took
+                                    an estimated 25 additional sq. mi., primarily in the Donetsk and Zaporizhzhia
+                                    directions.</li>
+                                <li><strong>Zaporizhzhia Held:</strong> Ukrainian special forces halted a major Russian
+                                    thrust toward the city of Zaporizhzhia on Mar. 6 — the outcome of a 3-month
+                                    comprehensive defensive operation. Ukrainian forces also reported advances near
+                                    Kupyansk and Oleksandrivka.</li>
+                                <li><strong>Overnight Strikes — Mar. 7:</strong> Russia launched a large-scale combined
+                                    attack with Shahed drones, cruise missiles, and ballistic missiles on Kyiv, Kharkiv,
+                                    and Dnipro. A missile struck a residential building in Kharkiv — 10 dead (including
+                                    2 children), 16 wounded. Ukraine intercepted the majority of projectiles.</li>
+                                <li><strong>Russian Losses — Mar. 8:</strong> Ukraine's General Staff reported 930
+                                    Russian casualties (killed/wounded) in the last 24 hours. Estimated total Russian
+                                    combat losses since Feb. 2022 now exceed 1.27 million personnel.</li>
+                                <li><strong>NATO — Reaffirmed Commitment:</strong> Secretary General Mark Rutte
+                                    confirmed: "Support to Ukraine does not waver." NATO's July 2026 Turkey Summit will
+                                    pivot strategy toward drone and AI dominance, reducing reliance on conventional
+                                    armor.</li>
+                                <li><strong>Lithuania Warning:</strong> Lithuanian intelligence services warn Russia is
+                                    militarizing Kaliningrad and border regions and could be "ready for wide-scale
+                                    conflict within 6 years if Western sanctions ease." <span
+                                        class="dev-tag">DEVELOPING</span></li>
+                                <li><strong>Air Defence Concern:</strong> With U.S. air-defence assets being diverted to
+                                    the Gulf, NATO allies are urgently reviewing Ukraine's supply pipeline. Ukraine's
+                                    counter-drone experience is now being shared with Gulf partners. <span
+                                        class="dev-tag">DEVELOPING</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Economic Impact -->
+                    <div class="region-card region-eco">
+                        <div class="region-header">
+                            <div class="region-icon">📈</div>
+                            <div>
+                                <div class="region-title">Economic Impact</div>
+                                <div class="region-sub">Oil Markets · Global Equities · Inflation Risk</div>
+                            </div>
+                            <div class="threat-level threat-moderate">ELEVATED</div>
+                        </div>
+                        <div class="region-body">
+                            <ul class="bullet-list">
+                                <li><strong>Crude Oil Prices Surging:</strong> Brent and WTI crude have spiked
+                                    significantly since the Strait of Hormuz closure; analysts estimate a sustained
+                                    closure could push Brent above $120/barrel. Roughly 20% of global seaborne oil flows
+                                    through the strait daily.</li>
+                                <li><strong>Global Equities Under Pressure:</strong> Major indices (S&P 500, FTSE 100,
+                                    DAX) opened lower on risk-off sentiment; energy stocks are the lone beneficiary.
+                                    Transportation, airlines, and manufacturing stocks face accelerating cost headwinds.
+                                </li>
+                                <li><strong>Inflation Alarm:</strong> Central banks — including the U.S. Fed and ECB —
+                                    are on alert; prolonged oil shock could reignite inflationary pressures, potentially
+                                    reversing ongoing rate-cut cycles. IMF analysts have flagged "exceptional
+                                    uncertainty." <span class="dev-tag">DEVELOPING</span></li>
+                                <li><strong>Shipping Rates Spiking:</strong> Gulf of Oman freight rates have tripled in
+                                    two weeks. War risk premiums on tanker voyages through the Gulf have increased
+                                    8–12×, with Lloyd's issuing emergency guidance for insurers.</li>
+                                <li><strong>Safe-Haven Flows:</strong> Gold has climbed sharply; U.S. Treasuries and
+                                    Swiss Francs are in high demand. Bitcoin briefly surged as an alternative store of
+                                    value before retreating on broader risk sentiment.</li>
+                                <li><strong>OPEC+ Response:</strong> An emergency OPEC+ virtual summit is scheduled for
+                                    March 11 to assess whether spare capacity can compensate for lost Iranian export
+                                    volumes. Saudi Arabia and the UAE have reportedly agreed in principle to increase
+                                    output. <span class="dev-tag">DEVELOPING</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div><!-- region-grid -->
+
+                <div class="report-footer">
+                    <span class="icon">ℹ️</span>
+                    <span>Sources: IISS, BBC World Service, Washington Post, Kyiv Post, Forbes, PBS Newshour, Breaking
+                        Defense, Al Arabiya, NATO.int, Lithuania Intelligence Services (March 2026). Items marked
+                        <strong>DEVELOPING</strong> are still unfolding — details may change.</span>
+                </div>
+            </div><!-- card -->
+        </section>
+
+    </div><!-- wrapper -->
+
+    <script>
+        /* ─── Tab Switching ─── */
+        function switchTab(id, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        /* ─── Auto Tab ─── */
+        function autoTab(el, nextId, maxLen) {
+            if (el.value.length >= maxLen) {
+                const next = document.getElementById(nextId);
+                if (next) next.focus();
+            }
+        }
+
+        /* ─── Zodiac Data ─── */
+        const ZODIAC = [
+            { sign: 'Capricorn', emoji: '♑', start: [12, 22], end: [1, 19], fun: "You're the CEO of stubbornness and success. You'd climb Everest just to put it on your résumé. Admirably relentless." },
+            { sign: 'Aquarius', emoji: '♒', start: [1, 20], end: [2, 18], fun: "You're the galaxy-brained visionary who invented something everyone uses but nobody remembers to thank you for. Rebel with a cause." },
+            { sign: 'Pisces', emoji: '♓', start: [2, 19], end: [3, 20], fun: "You cry at commercials, feel everyone's emotions before they do, and still contain multitudes. You're proof that sensitivity is a superpower." },
+            { sign: 'Aries', emoji: '♈', start: [3, 21], end: [4, 19], fun: "You charge headfirst into everything — including conversations, decisions, and that new diet you'll quit by Thursday. Certified firestarter." },
+            { sign: 'Taurus', emoji: '♉', start: [4, 20], end: [5, 20], fun: "You have three priorities: quality food, designer comfort, and never being rushed. You could turn a cave into a luxury retreat." },
+            { sign: 'Gemini', emoji: '♊', start: [5, 21], end: [6, 20], fun: "You hold two opposing opinions simultaneously and somehow win every argument. You're basically a philosophy department in human form." },
+            { sign: 'Cancer', emoji: '♋', start: [6, 21], end: [7, 22], fun: "You remember every emotional detail from 2009 AND noticed when the vibes shifted two seconds ago. Your intuition is frankly unsettling." },
+            { sign: 'Leo', emoji: '♌', start: [7, 23], end: [8, 22], fun: "You enter rooms as if there's a spotlight installed just for you — and honestly, there kind of is. Majestic and unrepentant." },
+            { sign: 'Virgo', emoji: '♍', start: [8, 23], end: [9, 22], fun: "You alphabetize your spices and spot a misaligned pixel from across the room. You don't have high standards; you have the right standards." },
+            { sign: 'Libra', emoji: '♎', start: [9, 23], end: [10, 22], fun: "You've been 'thinking about it' for six weeks and still haven't decided. But when you do? Pure, aesthetic perfection every time." },
+            { sign: 'Scorpio', emoji: '♏', start: [10, 23], end: [11, 21], fun: "You know three secrets about everyone in the room and plan to use exactly zero of them — unless provoked. Iceberg energy: 10% visible, 90% intense." },
+            { sign: 'Sagittarius', emoji: '♐', start: [11, 22], end: [12, 21], fun: "You've got a one-way ticket in your pocket and a philosophy degree you downloaded at 3 AM. Accidentally wise and perpetually booked." },
+        ];
+
+        function getZodiac(month, day) {
+            for (let z of ZODIAC) {
+                const [sm, sd] = z.start;
+                const [em, ed] = z.end;
+                if (sm <= em) {
+                    if ((month === sm && day >= sd) || (month === em && day <= ed)) return z;
+                } else {
+                    // Capricorn straddles year
+                    if ((month === sm && day >= sd) || (month < em) || (month === em && day <= ed)) return z;
+                }
+            }
+            return ZODIAC[0]; // fallback
+        }
+
+        /* ─── Main Calculate Function ─── */
+        function calculate() {
+            const dd = parseInt(document.getElementById('dob-dd').value);
+            const mm = parseInt(document.getElementById('dob-mm').value);
+            const yyyy = parseInt(document.getElementById('dob-yyyy').value);
+            const errEl = document.getElementById('calc-error');
+
+            errEl.style.display = 'none';
+
+            // Validation
+            if (!dd || !mm || !yyyy || dd < 1 || dd > 31 || mm < 1 || mm > 12 || yyyy < 1900 || yyyy > 2025) {
+                errEl.style.display = 'block';
+                return;
+            }
+
+            const dob = new Date(yyyy, mm - 1, dd);
+            const now = new Date(2026, 2, 8); // March 8, 2026
+
+            if (dob > now || isNaN(dob.getTime())) {
+                errEl.style.display = 'block';
+                return;
+            }
+
+            // ─── Exact Age ───
+            let years = now.getFullYear() - dob.getFullYear();
+            let months = now.getMonth() - dob.getMonth();
+            let days = now.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) { years--; months += 12; }
+
+            // ─── Day of Birth ───
+            const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayName = DAYS[dob.getDay()];
+
+            // ─── Formatted Date ───
+            const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const dateFormatted = `${dd} ${MONTHS_LONG[mm - 1]} ${yyyy}`;
+
+            // ─── Zodiac ───
+            const zodiac = getZodiac(mm, dd);
+
+            // ─── Display ───
+            document.getElementById('res-age').textContent = `${years} years, ${months} months & ${days} days`;
+            document.getElementById('res-day').textContent = `You were born on a ${dayName}`;
+            document.getElementById('res-date').textContent = dateFormatted;
+            document.getElementById('zodiac-emoji').textContent = zodiac.emoji;
+            document.getElementById('zodiac-name').textContent = zodiac.sign;
+            document.getElementById('zodiac-fun').textContent = zodiac.fun;
+
+            document.getElementById('result-placeholder').style.display = 'none';
+            const panel = document.getElementById('result-panel');
+            panel.classList.add('show');
+            panel.querySelectorAll('.stat-row, .zodiac-card').forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    el.style.transition = 'all 0.4s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateX(0)';
+                }, i * 80);
+            });
+        }
+
+        /* ─── Enter key support ─── */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && document.getElementById('tab-calculator').classList.contains('active')) {
+                calculate();
+            }
+        });
+    </script>
+</body>
+
+</html>
